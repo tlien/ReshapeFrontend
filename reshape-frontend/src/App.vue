@@ -1,17 +1,38 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Reshape frontpage</h1>
+    <button v-on:click="accessResource">Login</button>
+    <button v-on:click="getFeatures">Get features</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  methods: {
+    test: () => console.log("test"),
+    accessResource: async () => {
+      var res = await fetch("http://localhost:5000/api/v1/bm/identity");
+      console.log(res);
+
+      if(res.ok) {
+        var json = await res.json();
+        console.log(json);
+      }
+    },
+    getFeatures: async () => {
+      var res = await fetch("http://localhost:5000/api/v1/acc/accountadditions/features");
+
+      if(res.ok) {
+        var json = await res.json();
+        console.log(json);
+      }
+      if(res.status == '401') {
+        // window.location = "http://localhost:5200"
+        // Redirect to login page
+      }
+    },
   }
 }
 </script>
