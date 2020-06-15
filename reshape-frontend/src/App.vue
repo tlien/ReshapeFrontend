@@ -1,45 +1,47 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img alt="Vue logo" src="./assets/logo.png" />
     <h1>Reshape frontpage</h1>
     <button v-on:click="accessResource">Login</button>
     <button v-on:click="getFeatures">Get features</button>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app',
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "App",
   methods: {
     test: () => console.log("test"),
     accessResource: async () => {
-      var res = await fetch("http://localhost:5000/api/v1/bm/identity");
+      const res = await fetch("http://localhost:5000/api/v1/bm/identity");
       console.log(res);
 
       if(res.ok) {
-        var json = await res.json();
+        const json = await res.json();
         console.log(json);
       }
     },
     getFeatures: async () => {
-      var res = await fetch("http://localhost:5000/api/v1/acc/accountadditions/features");
+      const res = await fetch("http://localhost:5000/api/v1/acc/accountadditions/features");
 
       if(res.ok) {
-        var json = await res.json();
+        const json = await res.json();
         console.log(json);
       }
-      if(res.status == '401') {
+      if(res.status == 401) {
         // window.location = "http://localhost:5200"
         // Redirect to login page
       }
     },
   }
-}
+});
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

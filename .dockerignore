@@ -1,9 +1,0 @@
-**./node_modules
-**/.dockerignore
-**/.git
-**/.gitignore
-**/.vscode
-**/*.code-workspace
-**/docker-compose*
-**/Dockerfile*
-**/*.md
