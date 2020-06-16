@@ -19,6 +19,7 @@ export default class AuthService {
             filterProtocolClaims: true
         };
 
+        console.log(settings);
         this.userManager = new UserManager(settings);
     }
 
