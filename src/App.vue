@@ -73,7 +73,9 @@ export default Vue.extend({
         },
         getFeatures: function() {
             auth.getAccessToken().then((token: string) => {
-                axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+                console.log(axios.defaults.headers.common['Authorization']);
 
                 axios
                     .get(config.accServiceUrl + '/accountadditions/features')

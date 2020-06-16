@@ -1,5 +1,5 @@
-let config = {
-    identityServerUrl: 'http://identity.svc',
+const config = {
+    identityServerUrl: 'http://host.docker.internal:5200',
     accServiceUrl: 'http://localhost:5000/api/v1/acc',
     bmServiceUrl: 'http://localhost:5000/api/v1/bm',
     clientId: 'ReshapeFrontend',
@@ -8,16 +8,5 @@ let config = {
     silentRedirectUri: 'http://localhost:5300/silent-renew.html',
     postLogoutRedirectUri: 'http://localhost:5300'
 };
-if (process.env.VUE_APP_MODE === 'production') {
-    config = {
-        identityServerUrl: 'http://identity.svc',
-        accServiceUrl: 'http://apigw/api/v1/acc',
-        bmServiceUrl: 'http://apigw/api/v1/bm',
-        clientId: 'ReshapeFrontend',
-        scope: 'openid profile acc bm',
-        redirectUri: 'http://spa/callback.html',
-        silentRedirectUri: 'http://spa/silent-renew.html',
-        postLogoutRedirectUri: 'http://spa'
-    };
-}
+
 export default config;
