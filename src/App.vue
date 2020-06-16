@@ -57,7 +57,7 @@ export default Vue.extend({
                 this.currentUser = user.profile.name;
                 this.accessTokenExpired = user.expired;
                 this.isLoggedIn = user !== null && !user.expired;
-                console.log(user);
+                console.log("user:", user);
             }
         });
     },
