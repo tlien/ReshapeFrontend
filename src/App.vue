@@ -16,9 +16,14 @@
             <br />
             <br />
             <div v-bind:class="{ 'api-data': isLoggedIn }">
-                <h3 v-if="isLoggedIn">Call the API</h3>
+                <h2 v-if="isLoggedIn">Call the API</h2>
                 <button @click="getBmAuthRequired">Get bm auth required</button>
                 <button @click="getFeatures">Get features</button>
+                <br />
+                <br />
+                <div v-if="data">
+                    <textarea v-model="data" class="text-area"></textarea>
+                </div>
             </div>
         </div>
     </div>
@@ -41,7 +46,8 @@ export default Vue.extend({
             currentUser: '' as string | undefined,
             authResponse: '' as string,
             data: '' as string,
-            dataStatus: '' as string
+            dataStatus: '' as string,
+            features: '' as string
         };
     },
     mounted: function() {
@@ -74,9 +80,6 @@ export default Vue.extend({
         getFeatures: function() {
             auth.getAccessToken().then((token: string) => {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-                console.log(axios.defaults.headers.common['Authorization']);
-
                 axios
                     .get(config.accServiceUrl + '/accountadditions/features')
                     .then((response: any) => {
