@@ -40,7 +40,7 @@
     }
   },
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": "warn",
     "lines-between-class-members": "off",
     "no-console": "off",
     "class-methods-use-this": "off",
