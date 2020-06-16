@@ -6,10 +6,3 @@ services:
   spa:
     ports:
       - "5300:80"
-    networks:
-      - reshapebackend_default
-
-networks:
-  reshapebackend_default:
-    external: true
- 

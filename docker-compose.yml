@@ -8,3 +8,9 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile
+      
+networks:
+  default:
+    external: 
+      name: reshapebackend_default
+ 
