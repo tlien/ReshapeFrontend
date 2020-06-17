@@ -7,6 +7,7 @@
                 <h2 v-if="isLoggedIn && currentUser">Logged in as {{ currentUser }}</h2>
                 <button @click="login()" v-if="!isLoggedIn">Login</button>
                 <button @click="logout()" v-if="isLoggedIn">Logout</button>
+                <div v-if="accessTokenExpired" class="red">Access token has expired</div>
                 <br />
                 <br />
                 <div v-if="authResponse">
@@ -113,89 +114,28 @@ export default Vue.extend({
             auth.logout();
         },
         getClaims: async function() {
-            if (this.isLoggedIn) {
-                console.log("User is logged in, adding token to request")
-                const token = await auth.getAccessToken();
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            }
-            axios
-                .get(config.accServiceUrl + 'identity')
-                .then((response: any) => {
-                    this.data = JSON.stringify(response.data, null, 2);
-                    this.requestStatusCode = response.status;
-                    this.requestStatusText = response.statusText;
-                })
-                .catch((error: any) => {
-                    this.data = JSON.stringify(error.response.data, null, 2);
-                    this.requestStatusCode = error.response.status;
-                    this.requestStatusText = error.response.statusText;
-                });
+            this.baseAxios(config.accServiceUrl + 'identity')
         },
         getFeatures: async function() {
-            if (this.isLoggedIn) {
-                console.log("User is logged in, adding token to request")
-                const token = await auth.getAccessToken();
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            }
-            axios
-                .get(config.accServiceUrl + 'accountadditions/features')
-                .then((response: any) => {
-                    this.data = JSON.stringify(response.data, null, 2);
-                    this.requestStatusCode = response.status;
-                    this.requestStatusText = response.statusText;
-                })
-                .catch((error: any) => {
-                    this.data = JSON.stringify(error.response.data, null, 2);
-                    this.requestStatusCode = error.response.status;
-                    this.requestStatusText = error.response.statusText;
-                });
+            this.baseAxios(config.accServiceUrl + 'accountadditions/features')
         },
         getBusinessTiers: async function() {
-            if (this.isLoggedIn) {
-                console.log("User is logged in, adding token to request")
-                const token = await auth.getAccessToken();
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            }
-            axios
-                .get(config.bmServiceUrl + 'businesstiers')
-                .then((response: any) => {
-                    this.data = JSON.stringify(response.data, null, 2);
-                    this.requestStatusCode = response.status;
-                    this.requestStatusText = response.statusText;
-                })
-                .catch((error: any) => {
-                    this.data = JSON.stringify(error.response.data, null, 2);
-                    this.requestStatusCode = error.response.status;
-                    this.requestStatusText = error.response.statusText;
-                });
+            this.baseAxios(config.bmServiceUrl + 'businesstiers')
         },
         getAccount: async function() {
-            if (this.isLoggedIn) {
-                console.log("User is logged in, adding token to request")
-                const token = await auth.getAccessToken();
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            }
-            axios
-                .get(config.accServiceUrl + 'account/own')
-                .then((response: any) => {
-                    this.data = JSON.stringify(response.data, null, 2);
-                    this.requestStatusCode = response.status;
-                    this.requestStatusText = response.statusText;
-                })
-                .catch((error: any) => {
-                    this.data = JSON.stringify(error.response.data, null, 2);
-                    this.requestStatusCode = error.response.status;
-                    this.requestStatusText = error.response.statusText;
-                });
+            this.baseAxios(config.accServiceUrl + 'account/own')
         },
         getAllAccounts: async function() {
+            this.baseAxios(config.accServiceUrl + 'account')
+        },
+        baseAxios: async function(endpoint: string) {
             if (this.isLoggedIn) {
                 console.log("User is logged in, adding token to request")
                 const token = await auth.getAccessToken();
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             }
             axios
-                .get(config.accServiceUrl + 'account')
+                .get(endpoint)
                 .then((response: any) => {
                     this.data = JSON.stringify(response.data, null, 2);
                     this.requestStatusCode = response.status;
