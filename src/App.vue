@@ -17,9 +17,15 @@
             <br />
             <div v-bind:class="{ 'api-data': isLoggedIn }">
                 <h2 v-if="isLoggedIn">Call the API</h2>
-                <button @click="getBmAuthRequired">Get bm auth required</button>
-                <button @click="getFeatures">Get features</button>
-                <br />
+                <div id="callTheApiContent">
+                    <div v-if="requestStatusCode" v-bind:class="{ green: isSuccessStatusCode, red: isErrorStatusCode, blue: isServerErrorStatusCode }" class="request-status">
+                        {{ requestStatusCode + ' ' + requestStatusText }}
+                    </div>
+                    <div class="cta-actions">
+                        <button @click="getBmAuthRequired">Get bm auth required</button>
+                        <button @click="getFeatures">Get features</button>
+                    </div>
+                </div>
                 <br />
                 <div v-if="data">
                     <textarea v-model="data" class="text-area"></textarea>
@@ -46,9 +52,21 @@ export default Vue.extend({
             currentUser: '' as string | undefined,
             authResponse: '' as string,
             data: '' as string,
-            dataStatus: '' as string,
+            requestStatusCode: 0 as number,
+            requestStatusText: '' as string,
             features: '' as string
         };
+    },
+    computed: {
+        isSuccessStatusCode(): boolean {
+            return this.requestStatusCode >= 200 && this.requestStatusCode < 300;
+        },
+        isErrorStatusCode(): boolean {
+            return this.requestStatusCode >= 400 && this.requestStatusCode < 500;
+        },
+        isServerErrorStatusCode(): boolean {
+            return this.requestStatusCode >= 500 && this.requestStatusCode < 600;
+        }
     },
     mounted: function() {
         auth.getUser().then(user => {
@@ -68,28 +86,70 @@ export default Vue.extend({
         logout: () => {
             auth.logout();
         },
-        getBmAuthRequired: async () => {
-            const res = await fetch(config.bmServiceUrl + '/identity');
-            console.log(res);
-
-            if (res.ok) {
-                const json = await res.json();
-                console.log(json);
+        getBmAuthRequired: function() {
+            if (this.isLoggedIn) {
+                auth.getAccessToken().then((token: string) => {
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    axios
+                        .get(config.bmServiceUrl + '/identity')
+                        .then((response: any) => {
+                            this.data = JSON.stringify(response.data, null, 2);
+                            this.requestStatusCode = response.status;
+                            this.requestStatusText = response.statusText;
+                        })
+                        .catch((error: any) => {
+                            alert(error);
+                            this.data = JSON.stringify(error.data, null, 2);
+                            this.requestStatusCode = error.status;
+                            this.requestStatusText = error.statusText;
+                        });
+                });
+            } else {
+                axios
+                    .get(config.bmServiceUrl + '/identity')
+                    .then((response: any) => {
+                        this.data = JSON.stringify(response.data, null, 2);
+                        this.requestStatusCode = response.status;
+                        this.requestStatusText = response.statusText;
+                    })
+                    .catch((error: any) => {
+                        this.data = JSON.stringify(error.response.data, null, 2);
+                        this.requestStatusCode = error.response.status;
+                        this.requestStatusText = error.response.statusText;
+                    });
             }
         },
         getFeatures: function() {
-            auth.getAccessToken().then((token: string) => {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            if (this.isLoggedIn) {
+                auth.getAccessToken().then((token: string) => {
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    axios
+                        .get(config.accServiceUrl + '/accountadditions/features')
+                        .then((response: any) => {
+                            this.data = JSON.stringify(response.data, null, 2);
+                            this.requestStatusCode = response.status;
+                            this.requestStatusText = response.statusText;
+                        })
+                        .catch((error: any) => {
+                            this.data = JSON.stringify(error.response.data, null, 2);
+                            this.requestStatusCode = error.response.status;
+                            this.requestStatusText = error.response.statusText;
+                        });
+                });
+            } else {
                 axios
                     .get(config.accServiceUrl + '/accountadditions/features')
                     .then((response: any) => {
                         this.data = JSON.stringify(response.data, null, 2);
-                        this.dataStatus = response.status;
+                        this.requestStatusCode = response.status;
+                        this.requestStatusText = response.statusText;
                     })
                     .catch((error: any) => {
-                        alert(error);
+                        this.data = JSON.stringify(error.response.data, null, 2);
+                        this.requestStatusCode = error.response.status;
+                        this.requestStatusText = error.response.statusText;
                     });
-            });
+            }
         }
     },
     filters: {
@@ -130,5 +190,28 @@ export default Vue.extend({
 .text-area {
     width: 100%;
     height: 400px;
+}
+
+#callTheApiContent {
+    position: relative;
+}
+
+.request-status {
+    position: absolute;
+    width: 100%;
+    top: -20px;
+    text-align: center;
+}
+
+.green {
+    color: green;
+}
+
+.blue {
+    color: steelblue;
+}
+
+.red {
+    color: red;
 }
 </style>
