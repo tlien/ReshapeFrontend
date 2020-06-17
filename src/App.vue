@@ -43,8 +43,8 @@
                         <div>
                             <h4>Account Service</h4>
                             <button @click="getFeatures" class="btn-green">Get features</button>
-                            <button @click="notImplemented" class="btn-green">>>Get account</button>
-                            <button @click="notImplemented" class="btn-orange">>> Get all accounts</button>
+                            <button @click="getAccount" class="btn-green">>>Get account</button>
+                            <button @click="getAllAccounts" class="btn-orange">>> Get all accounts</button>
                         </div>
                         <div>
                             <h4><span class="dot bg-blue"></span> Current user claims</h4>
@@ -112,101 +112,100 @@ export default Vue.extend({
         logout: () => {
             auth.logout();
         },
-        getClaims: function() {
+        getClaims: async function() {
             if (this.isLoggedIn) {
-                auth.getAccessToken().then((token: string) => {
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                    axios
-                        .get(config.accServiceUrl + '/identity')
-                        .then((response: any) => {
-                            this.data = JSON.stringify(response.data, null, 2);
-                            this.requestStatusCode = response.status;
-                            this.requestStatusText = response.statusText;
-                        })
-                        .catch((error: any) => {
-                            this.data = JSON.stringify(error.response.data, null, 2);
-                            this.requestStatusCode = error.response.status;
-                            this.requestStatusText = error.response.statusText;
-                        });
-                });
-            } else {
-                axios
-                    .get(config.bmServiceUrl + '/identity')
-                    .then((response: any) => {
-                        this.data = JSON.stringify(response.data, null, 2);
-                        this.requestStatusCode = response.status;
-                        this.requestStatusText = response.statusText;
-                    })
-                    .catch((error: any) => {
-                        this.data = JSON.stringify(error.response.data, null, 2);
-                        this.requestStatusCode = error.response.status;
-                        this.requestStatusText = error.response.statusText;
-                    });
+                console.log("User is logged in, adding token to request")
+                const token = await auth.getAccessToken();
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             }
+            axios
+                .get(config.accServiceUrl + 'identity')
+                .then((response: any) => {
+                    this.data = JSON.stringify(response.data, null, 2);
+                    this.requestStatusCode = response.status;
+                    this.requestStatusText = response.statusText;
+                })
+                .catch((error: any) => {
+                    this.data = JSON.stringify(error.response.data, null, 2);
+                    this.requestStatusCode = error.response.status;
+                    this.requestStatusText = error.response.statusText;
+                });
         },
-        getFeatures: function() {
+        getFeatures: async function() {
             if (this.isLoggedIn) {
-                auth.getAccessToken().then((token: string) => {
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                    axios
-                        .get(config.accServiceUrl + '/accountadditions/features')
-                        .then((response: any) => {
-                            this.data = JSON.stringify(response.data, null, 2);
-                            this.requestStatusCode = response.status;
-                            this.requestStatusText = response.statusText;
-                        })
-                        .catch((error: any) => {
-                            this.data = JSON.stringify(error.response.data, null, 2);
-                            this.requestStatusCode = error.response.status;
-                            this.requestStatusText = error.response.statusText;
-                        });
-                });
-            } else {
-                axios
-                    .get(config.accServiceUrl + '/accountadditions/features')
-                    .then((response: any) => {
-                        this.data = JSON.stringify(response.data, null, 2);
-                        this.requestStatusCode = response.status;
-                        this.requestStatusText = response.statusText;
-                    })
-                    .catch((error: any) => {
-                        this.data = JSON.stringify(error.response.data, null, 2);
-                        this.requestStatusCode = error.response.status;
-                        this.requestStatusText = error.response.statusText;
-                    });
+                console.log("User is logged in, adding token to request")
+                const token = await auth.getAccessToken();
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             }
+            axios
+                .get(config.accServiceUrl + 'accountadditions/features')
+                .then((response: any) => {
+                    this.data = JSON.stringify(response.data, null, 2);
+                    this.requestStatusCode = response.status;
+                    this.requestStatusText = response.statusText;
+                })
+                .catch((error: any) => {
+                    this.data = JSON.stringify(error.response.data, null, 2);
+                    this.requestStatusCode = error.response.status;
+                    this.requestStatusText = error.response.statusText;
+                });
         },
-        getBusinessTiers: function() {
+        getBusinessTiers: async function() {
             if (this.isLoggedIn) {
-                auth.getAccessToken().then((token: string) => {
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                    axios
-                        .get(config.bmServiceUrl + '/businesstiers')
-                        .then((response: any) => {
-                            this.data = JSON.stringify(response.data, null, 2);
-                            this.requestStatusCode = response.status;
-                            this.requestStatusText = response.statusText;
-                        })
-                        .catch((error: any) => {
-                            this.data = JSON.stringify(error.response.data, null, 2);
-                            this.requestStatusCode = error.response.status;
-                            this.requestStatusText = error.response.statusText;
-                        });
-                });
-            } else {
-                axios
-                    .get(config.accServiceUrl + '/businesstiers')
-                    .then((response: any) => {
-                        this.data = JSON.stringify(response.data, null, 2);
-                        this.requestStatusCode = response.status;
-                        this.requestStatusText = response.statusText;
-                    })
-                    .catch((error: any) => {
-                        this.data = JSON.stringify(error.response.data, null, 2);
-                        this.requestStatusCode = error.response.status;
-                        this.requestStatusText = error.response.statusText;
-                    });
+                console.log("User is logged in, adding token to request")
+                const token = await auth.getAccessToken();
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             }
+            axios
+                .get(config.bmServiceUrl + 'businesstiers')
+                .then((response: any) => {
+                    this.data = JSON.stringify(response.data, null, 2);
+                    this.requestStatusCode = response.status;
+                    this.requestStatusText = response.statusText;
+                })
+                .catch((error: any) => {
+                    this.data = JSON.stringify(error.response.data, null, 2);
+                    this.requestStatusCode = error.response.status;
+                    this.requestStatusText = error.response.statusText;
+                });
+        },
+        getAccount: async function() {
+            if (this.isLoggedIn) {
+                console.log("User is logged in, adding token to request")
+                const token = await auth.getAccessToken();
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+            }
+            axios
+                .get(config.accServiceUrl + 'account/own')
+                .then((response: any) => {
+                    this.data = JSON.stringify(response.data, null, 2);
+                    this.requestStatusCode = response.status;
+                    this.requestStatusText = response.statusText;
+                })
+                .catch((error: any) => {
+                    this.data = JSON.stringify(error.response.data, null, 2);
+                    this.requestStatusCode = error.response.status;
+                    this.requestStatusText = error.response.statusText;
+                });
+        },
+        getAllAccounts: async function() {
+            if (this.isLoggedIn) {
+                console.log("User is logged in, adding token to request")
+                const token = await auth.getAccessToken();
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+            }
+            axios
+                .get(config.accServiceUrl + 'account')
+                .then((response: any) => {
+                    this.data = JSON.stringify(response.data, null, 2);
+                    this.requestStatusCode = response.status;
+                    this.requestStatusText = response.statusText;
+                })
+                .catch((error: any) => {
+                    this.data = JSON.stringify(error.response.data, null, 2);
+                    this.requestStatusCode = error.response.status;
+                    this.requestStatusText = error.response.statusText;
+                });
         },
         notImplemented: function() {
             alert('Not implemented');
