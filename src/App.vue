@@ -1,8 +1,8 @@
 <template>
     <div id="app">
-        <img alt="Vue logo" src="./assets/logo.png" />
+        <img alt="Vue logo" src="./assets/logo.png" height="50px"/>
         <h1>Reshape Frontend</h1>
-        <div v-bind:class="{ flex: isLoggedIn }">
+        <div>
             <div v-bind:class="{ 'auth-response': isLoggedIn }">
                 <h2 v-if="isLoggedIn && currentUser">Logged in as {{ currentUser }}</h2>
                 <button @click="login()" v-if="!isLoggedIn">Login</button>
@@ -15,19 +15,25 @@
             </div>
             <br />
             <br />
-            <div v-bind:class="{ 'api-data': isLoggedIn }">
-                <h2 v-if="isLoggedIn">Call the API</h2>
+            <div>
+                <h2>Call the API</h2>
                 <div id="callTheApiContent">
                     <div v-if="requestStatusCode" v-bind:class="{ green: isSuccessStatusCode, red: isErrorStatusCode, blue: isServerErrorStatusCode }" class="request-status">
                         {{ requestStatusCode + ' ' + requestStatusText }}
                     </div>
-                    <div class="cta-actions">
-                        <button @click="getBmAuthRequired">Get bm auth required</button>
-                        <button @click="getFeatures">Get features</button>
+                    <div class="cta-actions flex">
+                        <div>
+                            <h4>Business Management Service</h4>
+                            <button @click="getBmAuthRequired">Get bm auth required</button>
+                        </div>
+                        <div>
+                            <h4>Account Service</h4>
+                            <button @click="getFeatures">Get features</button>
+                        </div>
                     </div>
                 </div>
                 <br />
-                <div v-if="data">
+                <div>
                     <textarea v-model="data" class="text-area"></textarea>
                 </div>
             </div>
