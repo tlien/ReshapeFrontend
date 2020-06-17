@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <img alt="Vue logo" src="./assets/logo.png" height="50px"/>
+        <img alt="Vue logo" src="./assets/logo.png" height="50px" />
         <h1>Reshape Frontend</h1>
         <div>
-            <div v-bind:class="{ 'auth-response': isLoggedIn }">
+            <div>
                 <h2 v-if="isLoggedIn && currentUser">Logged in as {{ currentUser }}</h2>
                 <button @click="login()" v-if="!isLoggedIn">Login</button>
                 <button @click="logout()" v-if="isLoggedIn">Logout</button>
@@ -17,18 +17,38 @@
             <br />
             <div>
                 <h2>Call the API</h2>
+                <div class="left">
+                    <span class="dot bg-green"></span>
+                    <span>Requires authorization, but no elevated access</span>
+                </div>
+                <br />
+                <div class="left">
+                    <span class="dot bg-orange"></span>
+                    <span>Requires admin permissions</span>
+                </div>
+                <br />
+                <div class="left">
+                    <span class="dot bg-blue"></span>
+                    <span>Not related to services, strictly for information</span>
+                </div>
                 <div id="callTheApiContent">
                     <div v-if="requestStatusCode" v-bind:class="{ green: isSuccessStatusCode, red: isErrorStatusCode, blue: isServerErrorStatusCode }" class="request-status">
                         {{ requestStatusCode + ' ' + requestStatusText }}
                     </div>
                     <div class="cta-actions flex">
                         <div>
-                            <h4>Business Management Service</h4>
-                            <button @click="getBmAuthRequired">Get bm auth required</button>
+                            <h4><span class="dot bg-orange"></span> Business Management Service</h4>
+                            <button @click="getBusinessTiers">Get business tiers</button>
                         </div>
                         <div>
                             <h4>Account Service</h4>
-                            <button @click="getFeatures">Get features</button>
+                            <button @click="getFeatures" class="btn-green">Get features</button>
+                            <button @click="notImplemented" class="btn-green">>>Get account</button>
+                            <button @click="notImplemented" class="btn-orange">>> Get all accounts</button>
+                        </div>
+                        <div>
+                            <h4><span class="dot bg-blue"></span> Current user claims</h4>
+                            <button @click="getClaims">Get all user claims</button>
                         </div>
                     </div>
                 </div>
@@ -81,7 +101,7 @@ export default Vue.extend({
                 this.currentUser = user.profile.name;
                 this.accessTokenExpired = user.expired;
                 this.isLoggedIn = user !== null && !user.expired;
-                console.log("user:", user);
+                console.log('user:', user);
             }
         });
     },
@@ -92,22 +112,21 @@ export default Vue.extend({
         logout: () => {
             auth.logout();
         },
-        getBmAuthRequired: function() {
+        getClaims: function() {
             if (this.isLoggedIn) {
                 auth.getAccessToken().then((token: string) => {
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     axios
-                        .get(config.bmServiceUrl + '/identity')
+                        .get(config.accServiceUrl + '/identity')
                         .then((response: any) => {
                             this.data = JSON.stringify(response.data, null, 2);
                             this.requestStatusCode = response.status;
                             this.requestStatusText = response.statusText;
                         })
                         .catch((error: any) => {
-                            alert(error);
-                            this.data = JSON.stringify(error.data, null, 2);
-                            this.requestStatusCode = error.status;
-                            this.requestStatusText = error.statusText;
+                            this.data = JSON.stringify(error.response.data, null, 2);
+                            this.requestStatusCode = error.response.status;
+                            this.requestStatusText = error.response.statusText;
                         });
                 });
             } else {
@@ -156,6 +175,41 @@ export default Vue.extend({
                         this.requestStatusText = error.response.statusText;
                     });
             }
+        },
+        getBusinessTiers: function() {
+            if (this.isLoggedIn) {
+                auth.getAccessToken().then((token: string) => {
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    axios
+                        .get(config.bmServiceUrl + '/businesstiers')
+                        .then((response: any) => {
+                            this.data = JSON.stringify(response.data, null, 2);
+                            this.requestStatusCode = response.status;
+                            this.requestStatusText = response.statusText;
+                        })
+                        .catch((error: any) => {
+                            this.data = JSON.stringify(error.response.data, null, 2);
+                            this.requestStatusCode = error.response.status;
+                            this.requestStatusText = error.response.statusText;
+                        });
+                });
+            } else {
+                axios
+                    .get(config.accServiceUrl + '/businesstiers')
+                    .then((response: any) => {
+                        this.data = JSON.stringify(response.data, null, 2);
+                        this.requestStatusCode = response.status;
+                        this.requestStatusText = response.statusText;
+                    })
+                    .catch((error: any) => {
+                        this.data = JSON.stringify(error.response.data, null, 2);
+                        this.requestStatusCode = error.response.status;
+                        this.requestStatusText = error.response.statusText;
+                    });
+            }
+        },
+        notImplemented: function() {
+            alert('Not implemented');
         }
     },
     filters: {
@@ -183,11 +237,6 @@ export default Vue.extend({
     margin: 20px;
 }
 
-.auth-response {
-    flex: 1;
-    margin: 15px;
-}
-
 .api-data {
     flex: 1;
     margin: 15px;
@@ -205,7 +254,8 @@ export default Vue.extend({
 .request-status {
     position: absolute;
     width: 100%;
-    top: -20px;
+    top: -40px;
+    font-size: 24px;
     text-align: center;
 }
 
@@ -219,5 +269,43 @@ export default Vue.extend({
 
 .red {
     color: red;
+}
+
+.flex div {
+    flex: 1;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.bg-green {
+    background-color: green;
+}
+
+.bg-orange {
+    background-color: orange;
+}
+
+.bg-blue {
+    background-color: steelblue;
+}
+
+.btn-green {
+    background-color: green;
+    color: white;
+}
+
+.btn-orange {
+    background-color: orange;
+    color: white;
+}
+
+.left {
+    float: left;
 }
 </style>
