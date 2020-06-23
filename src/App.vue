@@ -114,25 +114,25 @@ export default Vue.extend({
             auth.logout();
         },
         getClaims: async function() {
-            this.baseAxios(config.accServiceUrl + 'identity')
+            this.baseAxios(config.accServiceUrl + 'identity');
         },
         getFeatures: async function() {
-            this.baseAxios(config.accServiceUrl + 'accountadditions/features')
+            this.baseAxios(config.accServiceUrl + 'accountadditions/features');
         },
         getBusinessTiers: async function() {
-            this.baseAxios(config.bmServiceUrl + 'businesstiers')
+            this.baseAxios(config.bmServiceUrl + 'businesstiers');
         },
         getAccount: async function() {
-            this.baseAxios(config.accServiceUrl + 'account/own')
+            this.baseAxios(config.accServiceUrl + 'account/own');
         },
         getAllAccounts: async function() {
-            this.baseAxios(config.accServiceUrl + 'account')
+            this.baseAxios(config.accServiceUrl + 'account');
         },
         baseAxios: async function(endpoint: string) {
             if (this.isLoggedIn) {
-                console.log("User is logged in, adding token to request")
+                console.log('User is logged in, adding token to request');
                 const token = await auth.getAccessToken();
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             }
             axios
                 .get(endpoint)
