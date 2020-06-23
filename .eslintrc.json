@@ -1,0 +1,75 @@
+{
+  "root": true,
+  "parser": "vue-eslint-parser",
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "vue"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "plugin:vue/essential",
+    "@vue/typescript/recommended",
+    "@vue/prettier",
+    "@vue/prettier/@typescript-eslint"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "parser": "@typescript-eslint/parser"
+  },
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".ts"
+        ]
+      }
+    }
+  },
+  "rules": {
+    "prettier/prettier": "warn",
+    "lines-between-class-members": "off",
+    "no-console": "off",
+    "class-methods-use-this": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/camelcase": "off",
+    "import/no-unresolved": "off",
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTernary": true
+      }
+    ],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "radix": [
+      "error",
+      "as-needed"
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true,
+        "optionalDependencies": true,
+        "peerDependencies": false
+      }
+    ]
+  }
+}
