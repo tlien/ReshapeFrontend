@@ -1,0 +1,16 @@
+version: "3.4"
+
+# Put image, build, depends_on and other BASE information here
+
+services:
+  spa:
+    image: spa
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+      
+networks:
+  default:
+    external: 
+      name: reshapebackend_default
+ 
